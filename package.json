@@ -1,0 +1,30 @@
+{
+  "name": "git-semver-tools",
+  "version": "0.1.0",
+  "description": "GitSemver tools",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/git-semver/git-semver-tools.git"
+  },
+  "keywords": [
+    "gitsemver",
+    "gitversion",
+    "semver",
+    "git"
+  ],
+  "author": "Kazantsev Nickolay",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/git-semver/git-semver-tools/issues"
+  },
+  "homepage": "https://github.com/git-semver/git-semver-tools#readme",
+  "dependencies": {
+    "commander": "^2.13.0",
+    "conf": "^1.4.0",
+    "lodash": "^4.17.4"
+  }
+}
