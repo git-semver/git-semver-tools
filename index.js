@@ -22,6 +22,7 @@ currentVersions: [ '<version>', ... ]
 */
 function produceActualDependenciesInfo(dependencies)
 {
+  // npm show git-version-info versions --json
   return dependencies;
 }
 
