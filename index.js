@@ -1,60 +1,37 @@
 #!/usr/bin/env node
 
+// После выпуска новой пререлизной версии пакета (целевой пакет),
+// нужно обновить его версию в пакете, который от него зависит (родительский пакет).
+// Для этого запускается данный скрипт.
+// На вход принимает:
+// - targetVersion - полная версия выпущенного целевого пакета
+// - targetName - название целевого пакета
+//
+// При этом обновляются все остальные зависимости в соответствии с пререлизной
+// группой:
+// - alpha
+// - beta
+// - rc
+// - hotfix
+// - feature-<featureTag>
+
 const path = require('path');
 const normalizeData = require('normalize-package-data');
+const program = require('commander');
+
+const serviceBump = require('./lib/service-bump');
+
 const defaultWorkDirectory = process.cwd();
+const version = require(path.join(__dirname, '/package.json')).version;
+let currentWorkDirectory = defaultWorkDirectory;
 
-const packageJsonPath = path.resolve(path.join(defaultWorkDirectory, 'package.json'));
-const prerelease = 'alpha';
-const targetVersion = 'service/alpha.1';
-const targetPackage = 'depended-package';
-const targetInfo = {
-  package: targetPackage,
-  version: targetVersion
-};
+program
+  .version(version, '-v, --version')
+  .arguments('[cwd]')
+  .option('-j, --json', 'output as JSON')
+  .option('-t, --teamcity', 'output for TeamCity as service message')
+  .option('-w, --write', 'write version into package.json')
+  .action(cwd => { currentWorkDirectory = cwd; })
+  .parse(process.argv);
 
-/*
-return
-{
-package: <packageName>
-currentVersions: [ '<version>', ... ]
-}
-*/
-function produceActualDependenciesInfo(dependencies)
-{
-  return dependencies;
-}
-
-function produceActualDependencies(dependencies, target)
-{
-  return dependencies;
-}
-
-function calculateChanges(dependenciesInfo)
-{
-  return 1;
-}
-
-function calculateServiceVersion(version, prerelease, dependenciesInfo)
-{
-  const changes = calculateChanges(dependenciesInfo);
-  const prereleasPackages = `${version}-service/${prerelease}.${changes}`;
-  return prereleasPackages;
-}
-
-const packageJsonData = require(packageJsonPath);
-const { dependencies, version: currentVersion } = packageJsonData;
-const actualDependenciesInfo = produceActualDependenciesInfo(dependencies);
-
-packageJsonData.version = calculateServiceVersion(
-  currentVersion,
-  prerelease,
-  actualDependenciesInfo
-);
-packageJsonData.dependencies = produceActualDependencies(
-  actualDependenciesInfo,
-  targetInfo
-);
-
-const writePackageJsonData = JSON.stringify(packageJsonData, null, 2);
-console.log(writePackageJsonData);
+console.log('Bump service version on directory:', currentWorkDirectory)
